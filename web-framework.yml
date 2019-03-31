@@ -1,0 +1,10 @@
+name: web-framework
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - python=3.7
+    - pip:
+        - gunicorn
+        - webob
+        - parse
