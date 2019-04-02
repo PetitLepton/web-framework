@@ -1,3 +1,4 @@
+from inspect import isclass
 from webob import Request, Response
 from parse import parse
 
@@ -8,6 +9,9 @@ class API:
 
     def route(self, path):
         """Decorator to extract the routes ala Flask"""
+
+        if path in self.routes.keys():
+            raise AssertionError("The route already exists.")
 
         def wrapper(handler):
             self.routes[path] = handler
@@ -38,6 +42,14 @@ class API:
     def handle_request(self, request):
         response = Response()
         handler, kwargs = self.find_handler(request_path=request.path)
+
+        if isclass(handler):
+            # handler is now the method request.method.lower from
+            # the initial handler class (if the method exists)
+            handler = getattr(handler(), request.method.lower(), None)
+            if handler is None:
+                raise AttributeError(f"The method {request.method} is not allowed.")
+
         handler(request, response, **kwargs)
         return response
 

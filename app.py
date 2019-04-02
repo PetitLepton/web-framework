@@ -16,3 +16,13 @@ def about(request, response):
 @app.route("/hello/{name}")
 def home(request, response, name):
     response.text = f"Bonjour {name}!"
+
+
+@app.route("/class")
+class MyClass:
+    def get(self, request, response):
+        response.text = f"GET method"
+
+    def post(self, request, response):
+        response.text = f"POST method"
+
